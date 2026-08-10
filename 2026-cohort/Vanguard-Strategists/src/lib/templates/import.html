@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload</title>
+    <style>
+     body{
+     width: 100%;
+     height: 100vh;
+     background-color: #fee0d2;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     }
+     form {
+     width: 60%;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     margin-top: 2rem;
+     padding: 1rem;
+     border: 1px solid black;
+     gap: 2rem;
+        }
+     form input {
+     width: 80%;
+     height: 80px
+     border: 1px solid white;
+     border-radius: 4px;
+        }
+     form button {
+     width: 80%;
+     height: 80px
+     border: 1px solid white;
+     border-radius: 4px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- enctype is mandatory for file transfers -->
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <h1 style="font-family: 'Bahnschrift', sans-serif, font-weight: bold; font-size: 50px; color: #fc9272; margin-bottom: 20px;">
+        VS Pollinator
+    </h1>
+        <label for="file">Import .csv file</label>
+        <input type="file" name="file" accept=".csv" required id="file">
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
