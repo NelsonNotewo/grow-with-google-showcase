@@ -12,10 +12,10 @@ class PlantRepository(object):
     def get_all(evidence_type_id: int|None = None, pollinator_id: int|None = None) -> list[Plant]:
         query = Plant.query
         if evidence_type_id is not None:
-            query = query.filter(Plant. evidence_type_id ==  evidence_type_id)
+            query = query.filter(Plant.evidenceTypeId ==  evidence_type_id)
         if pollinator_id is not None:
-            query = query.filter(Plant.pollinator_id == pollinator_id)
-        return query.order_by(Plant.name.asc()).all()
+            query = query.filter(Plant.pollinatorId == pollinator_id)
+        return query.order_by(Plant.scientificName.asc()).all()
 
     @staticmethod
     def get_by_name(scientific_name: str) -> Plant | None:

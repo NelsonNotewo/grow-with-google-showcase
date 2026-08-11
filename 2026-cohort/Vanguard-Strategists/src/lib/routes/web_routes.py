@@ -1,5 +1,7 @@
 import os
+import re
 from pathlib import Path
+from pydoc import locate
 from tkinter import EventType
 
 from flask import Blueprint, jsonify, render_template, request
@@ -18,7 +20,10 @@ def import_data():
 
 @web_routes.get('/')
 def home():
-    return render_template("index.html")
+    states = StateRepository.get_all()
+    counties = CountyRepository.get_all()
+    pollinators = PollinatorRepository.get_all()
+    return render_template("index.html", states=states, counties=counties, pollinators=pollinators)
 
 
 @web_routes.route('/upload', methods=['POST'])
@@ -123,4 +128,24 @@ def upload_file():
        counter += 1
 
     Path(destination_path).unlink()
-    return f'Successfully uploading file with items ({counter})'
+    return render_template("upload.html", import_count=counter)
+
+@web_routes.route('/search', methods=['POST'])
+def search():
+    stateId = request.form.get('state')
+    countyId = request.form.get('county')
+    pollinatorId = request.form.get('pollinator')
+
+    plant_pollinators = PlantRepository.get_all(pollinator_id=int(pollinatorId))
+    plants = []
+    for plant in plant_pollinators:
+        locates = LocateRepository.get_all(plant_id=int(plant.id), state_id=int(stateId), county_id=int(countyId))
+        if locates is not None and len(locates) > 0:
+            plant.image_url = slug(plant.scientificName)
+            plant.image_url = plant.image_url + ".jpg"
+            plants.append(plant)
+    return render_template("result.html", plants=plants)
+
+def slug(name):
+    """'Claytonia perfoliata subsp. perfoliata' -> 'Claytonia_perfoliata_subspperfoliata'"""
+    return re.sub(r"[^A-Za-z0-9]+", "_", name.capitalize()).strip("_")
